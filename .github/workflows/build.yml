@@ -34,7 +34,7 @@ jobs:
       run: |
         cp $GITHUB_WORKSPACE/patch/increase_parallel_downloads.patch ~/rpmbuild/SOURCES/librepo/
         cd ~/rpmbuild/SOURCES/librepo
-        patch -p1 < increase_parallel_downloads.patch
+        patch -p0 < increase_parallel_downloads.patch
 
     - name: Build RPM
       run: |
