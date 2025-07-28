@@ -1,0 +1,7 @@
+diff --git a/librepo/downloader.c b/librepo/downloader.c
+index abc123..def456 100644
+--- a/librepo/downloader.c
++++ b/librepo/downloader.c
+@@
+-#define LRO_MAXPARALLELDOWNLOADS 10
++#define LRO_MAXPARALLELDOWNLOADS 100

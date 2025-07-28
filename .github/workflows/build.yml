@@ -1,0 +1,51 @@
+name: Build Custom Librepo
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *'  # rebuild daily at 5am
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+
+    steps:
+    - name: Install build tools
+      run: |
+        dnf install -y git rpm-build rpmdevtools gcc make curl tar \
+                       dnf-utils createrepo_c fedpkg patch
+
+    - name: Set up RPM tree
+      run: rpmdev-setuptree
+
+    - name: Clone Fedora librepo
+      run: |
+        cd ~/rpmbuild/SOURCES
+        fedpkg clone --anonymous librepo
+        cp -r librepo/* .
+        cp librepo/librepo.spec ~/rpmbuild/SPECS/
+
+    - name: Apply patch
+      run: |
+        cd ~/rpmbuild/SOURCES/librepo
+        patch -p1 < $GITHUB_WORKSPACE/patch/increase_parallel_downloads.patch
+
+    - name: Build RPM
+      run: |
+        cd ~/rpmbuild/SPECS
+        rpmbuild -ba librepo.spec
+
+    - name: Prepare Yum repo
+      run: |
+        mkdir -p repo
+        cp ~/rpmbuild/RPMS/**/*.rpm repo/
+        createrepo_c repo
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./repo
+        publish_branch: gh-pages
