@@ -12,6 +12,9 @@ jobs:
       image: fedora:latest
 
     steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
     - name: Install build tools
       run: |
         dnf install -y git rpm-build rpmdevtools gcc make curl tar \
@@ -29,7 +32,7 @@ jobs:
 
     - name: Copy and apply patch
       run: |
-        cp patch/increase_parallel_downloads.patch ~/rpmbuild/SOURCES/librepo/
+        cp $GITHUB_WORKSPACE/patch/increase_parallel_downloads.patch ~/rpmbuild/SOURCES/librepo/
         cd ~/rpmbuild/SOURCES/librepo
         patch -p1 < increase_parallel_downloads.patch
 
