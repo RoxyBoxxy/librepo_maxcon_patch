@@ -30,7 +30,7 @@ jobs:
     - name: Apply patch
       run: |
         cd ~/rpmbuild/SOURCES/librepo
-        patch -p1 < $GITHUB_WORKSPACE/patch/increase_parallel_downloads.patch
+        patch -p1 < patch/increase_parallel_downloads.patch
 
     - name: Build RPM
       run: |
