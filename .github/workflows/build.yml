@@ -27,10 +27,11 @@ jobs:
         cp -r librepo/* .
         cp librepo/librepo.spec ~/rpmbuild/SPECS/
 
-    - name: Apply patch
+    - name: Copy and apply patch
       run: |
+        cp patch/increase_parallel_downloads.patch ~/rpmbuild/SOURCES/librepo/
         cd ~/rpmbuild/SOURCES/librepo
-        patch -p1 < patch/increase_parallel_downloads.patch
+        patch -p1 < increase_parallel_downloads.patch
 
     - name: Build RPM
       run: |
